@@ -2,7 +2,7 @@ import openai
 
 
 # Read key
-with open('/home/wace/Downloads/7zip/key3.txt', 'r') as file:
+with open('../../../Downloads/7zip/key3.txt', 'r') as file:
     content = file.read()
 
 # set the key
