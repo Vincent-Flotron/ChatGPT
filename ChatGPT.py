@@ -2,7 +2,8 @@ import openai
 
 
 # Read key
-with open('../../../Downloads/7zip/key3.txt', 'r') as file:
+# with open('../../../Downloads/7zip/key3.txt', 'r') as file:
+with open("../../GPTKey/key3.txt", 'r') as file:
     content = file.read()
 
 # set the key
@@ -10,22 +11,37 @@ openai.api_key = content
 
 preprompt = "Now you will emulate a Progress ABL interpreter. You will return strictly ONLY the output result of the following code preceded by the key word '_OK_' if the code as no error. If the code as an error, return the corrected code preceded by the key word '_ERROR_'. For exemple, if you receive 'DEFINE e AS CHARACTER NON-UNDO INITIAL ""hola"".\nDISPLAY(e).' you must return '_OK_ hola'. And if you receive 'DEFINE e AS CHARATER NON-UNDO INITIAL ""hola"".\nDISPLAY(e)', you must return '_NOK_ there is a mistake on the word CHARATER and a dot is missing after ""DISPLAY(e)"". Here is the corrected code: DEFINE e AS CHARACTER NON-UNDO INITIAL ""hola"".\nDISPLAY(e).'\nNow here is the Progress ABL code to interpret: "
 
+# def prompt_gpt4(prompt_text):
+#     response = openai.Completion.create(
+#         engine="text-davinci-003",
+#         prompt=prompt_text,
+#         max_tokens=2048,
+#         n=1,
+#         stop=None,
+#         temperature=0.1,
+#     )
+#     return response.choices[0].text.strip()
+# Note: you need to be using OpenAI Python v0.27.0 for the code below to work
+
 def prompt_gpt4(prompt_text):
-    response = openai.Completion.create(
-        engine="text-davinci-003",
-        prompt=prompt_text,
-        max_tokens=2048,
-        n=1,
-        stop=None,
-        temperature=0.1,
+    openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[
+            {"role": "system", "content": "Now you will emulate a Progress ABL interpreter. You will return strictly ONLY the output result of the following code preceded by the key word '_OK_' if the code as no error. If the code as an error, return the corrected code preceded by the key word '_ERROR_'"},
+            {"role": "user", "content": "DEFINE e AS CHARACTER NON-UNDO INITIAL ""hola"".\nDISPLAY(e)."},
+            {"role": "assistant", "content": "_OK_ hola"},
+            {"role": "user", "content": "DEFINE e AS CHARATER NON-UNDO INITIAL ""hola"".\nDISPLAY(e)"},
+            {"role": "assistant", "content": "_NOK_ there is a mistake on the word CHARATER and a dot is missing after ""DISPLAY(e)"". Here is the corrected code: DEFINE e AS CHARACTER NON-UNDO INITIAL ""hola"".\nDISPLAY(e)."},
+            {"role": "user", "content": prompt_text}
+        ]
     )
-    return response.choices[0].text.strip()
 
 # DEFINE myvar AS INTEGER NO-UNDO INITIAL 10\nDISPLAY("Value: " + STRING(myvar)).
 continue_asking = True
 while continue_asking:
 
-    prompt = input('Write what you want: ')
+    # prompt = input('Write what you want: ')
+    prompt = "DEFINE mess AS CHARATER NON-UNDO INITIAL ""hello world"".\nDISPLAY(mess + "" 2"")."
 
     if ( prompt == "quit" or prompt == "q" ):
         continue_asking = False
