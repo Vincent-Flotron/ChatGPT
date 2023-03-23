@@ -2,8 +2,8 @@ import openai
 
 
 # Read key
-# with open('../../../Downloads/7zip/key3.txt', 'r') as file:
-with open("../../GPTKey/key3.txt", 'r') as file:
+with open('../../../Downloads/7zip/key3.txt', 'r') as file:
+# with open("../../GPTKey/key3.txt", 'r') as file:
     content = file.read()
 
 # set the key
@@ -24,10 +24,10 @@ preprompt = "Now you will emulate a Progress ABL interpreter. You will return st
 # Note: you need to be using OpenAI Python v0.27.0 for the code below to work
 
 def prompt_gpt4(prompt_text):
-    openai.ChatCompletion.create(
+    response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
     messages=[
-            {"role": "system", "content": "Now you will emulate a Progress ABL interpreter. You will return strictly ONLY the output result of the following code preceded by the key word '_OK_' if the code as no error. If the code as an error, return the corrected code preceded by the key word '_ERROR_'"},
+            {"role": "system", "content": "Now you will emulate a Progress ABL interpreter. You will return striclty ONLY the output result of the following code preceded by the key word '_OK_' if the code as no error. If the code as an error, return the corrected code preceded by the key word '_ERROR_' and dont use the keyword '_OK_'"},
             {"role": "user", "content": "DEFINE e AS CHARACTER NON-UNDO INITIAL ""hola"".\nDISPLAY(e)."},
             {"role": "assistant", "content": "_OK_ hola"},
             {"role": "user", "content": "DEFINE e AS CHARATER NON-UNDO INITIAL ""hola"".\nDISPLAY(e)"},
@@ -35,20 +35,22 @@ def prompt_gpt4(prompt_text):
             {"role": "user", "content": prompt_text}
         ]
     )
+    return response.choices[0].message.content  # To extract just the assistant's reply
+
 
 # DEFINE myvar AS INTEGER NO-UNDO INITIAL 10\nDISPLAY("Value: " + STRING(myvar)).
 continue_asking = True
-while continue_asking:
+# while continue_asking:
 
-    # prompt = input('Write what you want: ')
-    prompt = "DEFINE mess AS CHARATER NON-UNDO INITIAL ""hello world"".\nDISPLAY(mess + "" 2"")."
+# prompt = input('Write what you want: ')
+prompt = "DEFINE mess AS CHARATER NON-UNDO INITIAL ""hello world"".\nDISPLAY(mess + "" 2"")."
 
-    if ( prompt == "quit" or prompt == "q" ):
-        continue_asking = False
+if ( prompt == "quit" or prompt == "q" ):
+    continue_asking = False
 
-    else:
-        answer = prompt_gpt4(preprompt + prompt)
-        print(answer)
+else:
+    answer = prompt_gpt4(preprompt + prompt)
+    print(answer)
 
 
 
