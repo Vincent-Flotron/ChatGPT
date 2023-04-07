@@ -4,6 +4,11 @@ Exercice 1 : Variable
 ---------------------
 
 Écrivez un script qui demande à l'utilisateur son nom et qui affiche un message de salutation en utilisant sa réponse.
+Utilisez la fonction:
+```vb
+Valeur_de_retour = InputBox("Texte demandant d'entrer une valeur")
+```
+Afin d'afficher un texte et de **récupérer ce que l'utilisateur a entré**.
 
 
 Exercice 2 : Tableaux
